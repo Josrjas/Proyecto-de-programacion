@@ -2,8 +2,8 @@ from Construccionfuncion import Comprobacion_de_jugada_valida
 from Construccionfuncion import matriz_jugada
 def ubicacion_fichas(matriz_jugada,Turno):
     jug_posibles = []
-    for fila in range(1,9):
-        for columna in range(1,9):
+    for fila in range(1,10):
+        for columna in range(1,10):
             if Turno == True:
                 if matriz_jugada[fila][columna] == "X":
                     #Nombredejugadas
