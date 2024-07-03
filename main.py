@@ -96,8 +96,8 @@ while Apagar == False:
         Turno = input(": ")
         while Turno != "Si" and Turno != "No" and Turno != "si" and Turno != "no":
             Turno = input(": ")
+            
         if Turno == "Si" or "si":
-            T_computer = True
             termina = False
             while termina != True:
                 if contador%2 == 0 or contador == 0:
@@ -109,4 +109,4 @@ while Apagar == False:
                     termina = True
 
         elif Turno == "No" or "no":
-            T_computer = False
+            pass
