@@ -1,15 +1,4 @@
-matriz_inicial = [[" ","A","B","C","D","E","F","G","H"],
-                  ["1","-","O","-","O","-","O","-","O"],
-                  ["2","O","-","O","-","O","-","O","-"],
-                  ["3","-","-","-","-","-","-","-","-"],
-                  ["4","-","-","-","-","-","-","-","-"],
-                  ["5","-","-","-","-","-","-","-","-"],
-                  ["6","-","-","-","-","-","-","-","-"],
-                  ["7","-","X","-","X","-","X","-","X"],
-                  ["8","X","-","X","-","X","-","X","-"]]
-
-matriz_jugada = matriz_inicial
-def Comprobacion_de_jugada_valida(jugada):
+def Comprobacion_de_jugada_valida(jugada,matriz_jugada):
     if len(jugada) == 4:
         caracter_de_variable = list(jugada)
         dic = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8}
@@ -62,7 +51,7 @@ def Comprobacion_de_jugada_valida(jugada):
             return False
     else:
         return False
-def Permitido_al_jugador(jugada,contador):
+def Permitido_al_jugador(jugada,contador,matriz_jugada):
     caracter_de_variable = []
     dic = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8}
     for caracter in jugada:
