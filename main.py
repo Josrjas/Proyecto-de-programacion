@@ -7,6 +7,7 @@ from movimientos import final
 from Brainiac import Computadora
 from Brainiac import ubicacion_fichas
 Apagar = False
+
 while Apagar == False:
     matriz_inicial = [[" ", "A", "B", "C", "D", "E", "F", "G", "H"],
                       ["1", "-", "O", "-", "O", "-", "O", "-", "O"],
@@ -48,9 +49,9 @@ while Apagar == False:
         print(f"Turno de {J_1}")
         while termina != True:
             jugada = input(": ")
-            if Comprobacion_de_jugada_valida(jugada) == True and Permitido_al_jugador(jugada, contador):
+            if Comprobacion_de_jugada_valida(jugada,matriz_jugada) == True and Permitido_al_jugador(jugada, contador,matriz_jugada):
                 contador += 1
-                matriz_jugada = mov(jugada)
+                matriz_jugada = mov(jugada,matriz_jugada)
                 print(Construir_funcion(matriz_jugada))
                 ganador = final(matriz_jugada)
                 if contador % 2 == 0:
@@ -71,7 +72,7 @@ while Apagar == False:
                 print("Partida Cancelada")
                 ganador = "Cancelada"
                 termina = True
-            elif Comprobacion_de_jugada_valida(jugada) == False or Permitido_al_jugador(jugada, contador):
+            elif Comprobacion_de_jugada_valida(jugada,matriz_jugada) == False or Permitido_al_jugador(jugada, contador, matriz_jugada):
                 print("Error en jugada")
         with open("registro", 'r') as archivo:
             a = len(archivo.readlines())
@@ -96,17 +97,48 @@ while Apagar == False:
         Turno = input(": ")
         while Turno != "Si" and Turno != "No" and Turno != "si" and Turno != "no":
             Turno = input(": ")
-            
         if Turno == "Si" or "si":
+            Turno = True
             termina = False
+            print(Construir_funcion(matriz_inicial))
             while termina != True:
-                if contador%2 == 0 or contador == 0:
-                    mov(Computadora(ubicacion_fichas(matriz_jugada,Turno)))
-                elif contador%2 == 1:
+                if contador%2 == 1:
+                    jugada_CPU = Computadora(ubicacion_fichas(matriz_jugada,Turno),Turno,matriz_jugada)
+                    matriz_jugada = mov(jugada_CPU,matriz_jugada)
+                    print(f"CPU juega: {jugada_CPU}")
+                    print(Construir_funcion(matriz_jugada))
+                    contador += 1
+                elif contador % 2 == 0 or contador == 0:
                     print("Introduce tu siguiente jugada")
                     jugada = input(": ")
-                if final(jugada) == True:
+                    if Comprobacion_de_jugada_valida(jugada,matriz_jugada) == False:
+                        print("Error en jugada")
+                    else:
+                        print(Construir_funcion(mov(jugada,matriz_jugada)))
+                        contador += 1
+                if final(matriz_jugada) == True:
+                    termina = True
+#falta
+        elif Turno == "No" or "no":
+            Turno = False
+            termina = False
+            print(Construir_funcion(matriz_inicial))
+            while termina != True:
+                if contador % 2 == 0 or contador == 0:
+                    jugada_CPU = Computadora(ubicacion_fichas(matriz_jugada, Turno), Turno)
+                    matriz_jugada = mov(jugada_CPU)
+                    print(f"CPU juega: {jugada_CPU}")
+                    print(Construir_funcion(matriz_jugada))
+                    contador += 1
+                elif contador % 2 == 1:
+                    print("Introduce tu siguiente jugada")
+                    jugada = input(": ")
+                    if Comprobacion_de_jugada_valida(jugada) == False:
+                        print("Error en jugada")
+                    else:
+                        print(Construir_funcion(mov(jugada)))
+                        contador += 1
+                if final(matriz_jugada) == True:
                     termina = True
 
-        elif Turno == "No" or "no":
-            pass
+
