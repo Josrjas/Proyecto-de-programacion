@@ -1,13 +1,3 @@
-matriz_inicial = [[" ","A","B","C","D","E","F","G","H"],
-                  ["1","-","O","-","O","-","O","-","O"],
-                  ["2","O","-","O","-","O","-","O","-"],
-                  ["3","-","-","-","-","-","-","-","-"],
-                  ["4","-","-","-","-","-","-","-","-"],
-                  ["5","-","-","-","-","-","-","-","-"],
-                  ["6","-","-","-","-","-","-","-","-"],
-                  ["7","-","X","-","X","-","X","-","X"],
-                  ["8","X","-","X","-","X","-","X","-"]]
-matriz_jugada = matriz_inicial
 def Construir_funcion(lis):
     matriz = ""
     for a in range(0, 9):
@@ -18,7 +8,7 @@ def Construir_funcion(lis):
         matriz += fila
     return matriz
 
-def mov (jugada):
+def mov (jugada,matriz_jugada):
     dic = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8}
     j_list = []
     for caracter in jugada:
