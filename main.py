@@ -118,14 +118,14 @@ while Apagar == False:
                         contador += 1
                 if final(matriz_jugada) == True:
                     termina = True
-#falta
+
         elif Turno == "No" or "no":
             Turno = False
             termina = False
             print(Construir_funcion(matriz_inicial))
             while termina != True:
                 if contador % 2 == 0 or contador == 0:
-                    jugada_CPU = Computadora(ubicacion_fichas(matriz_jugada, Turno), Turno)
+                    jugada_CPU = Computadora(ubicacion_fichas(matriz_jugada, Turno), Turno,matriz_jugada)
                     matriz_jugada = mov(jugada_CPU)
                     print(f"CPU juega: {jugada_CPU}")
                     print(Construir_funcion(matriz_jugada))
@@ -140,5 +140,3 @@ while Apagar == False:
                         contador += 1
                 if final(matriz_jugada) == True:
                     termina = True
-
-
