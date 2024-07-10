@@ -89,12 +89,13 @@ while Apagar == False:
                         print(f"¡Ha perdido {J_1}!")
                         ganador = J_2
                         
-                        estadisticas[J_1][1] += 1 
+                        estadisticas[J_2][1] += 1 
 
             elif jugada == "Esc":
+                partidas.append(matriz_jugada)
+                
                 print("Partida Cancelada")
                 ganador = "Cancelada"
-                partidas.append(matriz_jugada)
                 termina = True
             elif Comprobacion_de_jugada_valida(jugada,matriz_jugada) == False or Permitido_al_jugador(jugada, contador, matriz_jugada):
                 print("Error en jugada")
@@ -138,9 +139,23 @@ while Apagar == False:
 
 
     elif int(opcion) == 3:
+        open("registro", 'a')
+        ganador = ""
+
         contador = 0
         print("Introduce tu nombre")
         J_1 = input(":")
+
+        hora_actual = f"{datetime.datetime.now().hour}:{datetime.datetime.now().minute}"
+        fecha = datetime.date.today()
+        
+        for j in (J_1, "Computadora"):
+            if j not in estadisticas:
+                estadisticas[j] = [1,0]
+            else:
+                estadisticas[j][0] += 1
+
+        
         print("¿Jugaras primero? (Si o No)")
         Turno = input(": ").lower()
         while Turno != "si" and Turno != "no":
@@ -161,8 +176,11 @@ while Apagar == False:
                     print("Introduce tu siguiente jugada")
                     jugada = input(": ")
                     if jugada == "Esc":
+                        partidas.append(matriz_jugada)
+
                         print("Partida Cancelada")
                         termina = True
+                        ganador = "Cancelada"
                     else:
                         if Comprobacion_de_jugada_valida(jugada, matriz_jugada) == False:
                             print("Error en jugada")
@@ -172,8 +190,13 @@ while Apagar == False:
                             print(Construir_tablero(Mover_ficha(jugada, matriz_jugada)))
                             contador += 1
                 if final(matriz_jugada) == True:
-                    termina = True
+                    partidas.append(matriz_jugada)
 
+                    termina = True
+                    if contador % 2 == 1:
+                        ganador = J_1
+                    else:
+                        ganador = "Computadora"
         else:
             Turno = False
             print(Construir_tablero(matriz_inicial))
@@ -189,8 +212,11 @@ while Apagar == False:
                     print("Introduce tu siguiente jugada")
                     jugada = input(": ")
                     if jugada == "Esc":
+                        partidas.append(matriz_jugada)
+
                         print("Partida Cancelada")
                         termina = True
+                        ganador = "Cancelada"  
                     else:
                         if Comprobacion_de_jugada_valida(jugada, matriz_jugada) == False:
                             print("Error en jugada")
@@ -200,6 +226,19 @@ while Apagar == False:
                             print(Construir_tablero(Mover_ficha(jugada, matriz_jugada)))
                             contador += 1
 
-
                 if final(matriz_jugada) == True:
+                    partidas.append(matriz_jugada)
+
                     termina = True
+                    if contador % 2 == 1:
+                        ganador = J_1
+                        estadisticas[ganador][1] += 1 
+                    else:
+                        ganador = "Computadora"
+                        estadisticas[ganador][1] += 1
+
+        with open("registro", 'r') as archivo:
+            a = len(archivo.readlines())
+        with open("registro", 'a') as archivo:
+            archivo.write(f"{a + 1} {J_1} VS Computadora   {fecha} {hora_actual}   {ganador}\n")
+            archivo.close()
