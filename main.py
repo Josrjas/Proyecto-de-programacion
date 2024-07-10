@@ -5,7 +5,6 @@ from Construccionfuncion import Comprobacion_de_jugada_valida
 from Construccionfuncion import Permitido_al_jugador
 from movimientos import final
 from Brainiac import Computadora
-from Brainiac import ubicacion_fichas
 Apagar = False
 
 while Apagar == False:
@@ -94,13 +93,14 @@ while Apagar == False:
         print("Introduce tu nombre")
         J_1 = input(":")
         print("¿Jugaras primero? (Si o No)")
-        Turno = input(": ")
-        while Turno != "Si" and Turno != "No" and Turno != "si" and Turno != "no":
+        Turno = input(": ").lower()
+        while Turno != "si" and Turno != "no":
             Turno = input(": ")
-        if Turno == "Si" or Turno == "si":
+        termina = False
+        if Turno == "si":
             Turno = True
-            termina = False
             print(Construir_funcion(matriz_inicial))
+            
             while termina != True:
                 if contador%2 == 1:
                     jugada_CPU = Computadora(Turno,matriz_jugada)
@@ -108,7 +108,7 @@ while Apagar == False:
                     print(f"CPU juega: {jugada_CPU}")
                     print(Construir_funcion(matriz_jugada))
                     contador += 1
-                elif contador % 2 == 0 or contador == 0:
+                else:
                     print("Introduce tu siguiente jugada")
                     jugada = input(": ")
                     if jugada == "Esc":
@@ -125,30 +125,30 @@ while Apagar == False:
                 if final(matriz_jugada) == True:
                     termina = True
 
-        elif Turno == "No" or Turno == "no":
+        else:
             Turno = False
-            termina = False
             print(Construir_funcion(matriz_inicial))
+           
             while termina != True:
-                if contador % 2 == 0 or contador == 0:
+                if contador % 2 == 0:
                     jugada_CPU = Computadora(Turno,matriz_jugada)
-                    matriz_jugada = mov(jugada_CPU)
+                    matriz_jugada = mov(jugada_CPU,matriz_jugada)
                     print(f"CPU juega: {jugada_CPU}")
                     print(Construir_funcion(matriz_jugada))
                     contador += 1
-                elif contador % 2 == 1:
+                else:
                     print("Introduce tu siguiente jugada")
                     jugada = input(": ")
                     if jugada == "Esc":
-                        termina = True
                         print("Partida Cancelada")
+                        termina = True
                     else:
-                        if Comprobacion_de_jugada_valida(jugada) == False:
+                        if Comprobacion_de_jugada_valida(jugada, matriz_jugada) == False:
                             print("Error en jugada")
                         elif Permitido_al_jugador(jugada, contador, matriz_jugada) == False:
                             print("No puedes mover esa ficha")
                         else:
-                            print(Construir_funcion(mov(jugada)))
+                            print(Construir_funcion(mov(jugada, matriz_jugada)))
                             contador += 1
 
 

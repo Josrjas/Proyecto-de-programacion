@@ -48,31 +48,49 @@ def valorar_movimientos(ficha, matriz_jugada, turno):
 
     return lista
 
-def obtener_mejor_movimiento(posicion_valor):
+def obtener_mejor_movimiento(turno, posicion_valor):
     letras = {1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "F", 7: "G", 8: "H"}
     mayor_clave = max(posicion_valor.values(), key=abs)
     maximo = [key for key, value in posicion_valor.items() if abs(value) == abs(mayor_clave)]
     jugada_posible = []
 
     for posicion in maximo:
-        cpu_jugada = ""
-        if posicion_valor[posicion] == 4:
-            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) - 2}"
-        elif posicion_valor[posicion] == -4:
-            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 2]}{int(posicion[0]) - 2}"
-        elif posicion_valor[posicion] == 3:
-            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 1]}{int(posicion[0]) - 1}"
-        elif posicion_valor[posicion] == -3:
-            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 1]}{int(posicion[0]) - 1}"
-        elif posicion_valor[posicion] == 2:
-            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 1]}{int(posicion[0]) + 1}"
-        elif posicion_valor[posicion] == -2:
-            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 1]}{int(posicion[0]) + 1}"
-        elif posicion_valor[posicion] == 1:
-            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) + 2}"
-        elif posicion_valor[posicion] == -1:
-            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 2]}{int(posicion[0]) + 2}"
-       
+        if turno:
+            cpu_jugada = ""
+            if posicion_valor[posicion] == 4:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) - 2}"
+            elif posicion_valor[posicion] == -4:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 2]}{int(posicion[0]) - 2}"
+            elif posicion_valor[posicion] == 3:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 1]}{int(posicion[0]) - 1}"
+            elif posicion_valor[posicion] == -3:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 1]}{int(posicion[0]) - 1}"
+            elif posicion_valor[posicion] == 2:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 1]}{int(posicion[0]) + 1}"
+            elif posicion_valor[posicion] == -2:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 1]}{int(posicion[0]) + 1}"
+            elif posicion_valor[posicion] == 1:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) + 2}"
+            elif posicion_valor[posicion] == -1:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 2]}{int(posicion[0]) + 2}"
+        else:
+            cpu_jugada = ""
+            if posicion_valor[posicion] == 4:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) + 2}"
+            elif posicion_valor[posicion] == -4:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 2]}{int(posicion[0]) + 2}"
+            elif posicion_valor[posicion] == 3:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 1]}{int(posicion[0]) + 1}"
+            elif posicion_valor[posicion] == -3:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 1]}{int(posicion[0]) + 1}"
+            elif posicion_valor[posicion] == 2:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 1]}{int(posicion[0]) - 1}"
+            elif posicion_valor[posicion] == -2:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 1]}{int(posicion[0]) - 1}"
+            elif posicion_valor[posicion] == 1:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) - 2}"
+            elif posicion_valor[posicion] == -1:
+                cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 2]}{int(posicion[0]) - 2}"
         jugada_posible.append(cpu_jugada)
 
     return random.choice(jugada_posible)
@@ -96,4 +114,4 @@ def Computadora(turno, matriz_jugada):
     for ficha in posiciones:
         movimientos.update(valorar_movimientos(ficha, matriz_jugada, turno))
 
-    return obtener_mejor_movimiento(movimientos)
+    return obtener_mejor_movimiento(turno, movimientos)
