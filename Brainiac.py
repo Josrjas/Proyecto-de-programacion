@@ -1,140 +1,99 @@
 import random
-def ubicacion_fichas(matriz_jugada,Turno):
-    jug_posibles = []
+def valorar_movimientos(ficha, matriz_jugada, turno):
+    def esta_en_rango(x, y):
+        return 1 <= x <= 8 and 1 <= y <= 8
+    
+    def puede_saltar(matriz_jugada, x, y, x2, y2):
+        return (matriz_jugada[x][y] in ["O", "X"]) and (matriz_jugada[x2][y2] == "-")
+
+    lista = {}
+    x = int(ficha[0])
+    y =int(ficha[1])
+    
+    # Se asigna un puntaje a cada movimiento y se guarda en un diccionario
+    if turno: # Juega con "X"
+        if esta_en_rango(x - 2, y + 2) and puede_saltar(matriz_jugada, x - 1, y + 1, x - 2, y + 2):
+            lista[ficha] = 4
+        elif esta_en_rango(x - 2, y - 2) and puede_saltar(matriz_jugada, x - 1, y - 1, x - 2, y - 2):
+            lista[ficha] = -4
+        elif esta_en_rango(x - 1, y + 1) and (matriz_jugada[x - 1][y + 1] == "-"):
+            lista[ficha] = 3
+        elif esta_en_rango(x - 1, y - 1) and (matriz_jugada[x - 1][y - 1] == "-"):
+            lista[ficha] = -3
+        elif esta_en_rango(x + 1, y + 1) and (matriz_jugada[x + 1][y + 1] == "-"):
+            lista[ficha] = 2
+        elif esta_en_rango(x + 1, y - 1) and (matriz_jugada[x + 1][y - 1] == "-"):
+            lista[ficha] = -2
+        elif esta_en_rango(x + 2, y + 2) and puede_saltar(matriz_jugada, x + 1, y + 1, x + 2, y + 2):
+            lista[ficha] = 1
+        elif esta_en_rango(x + 2, y - 2) and puede_saltar(matriz_jugada, x + 1, y - 1, x + 2, y - 2):
+            lista[ficha] = -1
+    else: # Juega con "O"
+        if esta_en_rango(x + 2, y + 2) and puede_saltar(matriz_jugada, x + 1, y + 1, x + 2, y + 2):
+            lista[ficha] = 4
+        elif esta_en_rango(x + 2, y - 2) and puede_saltar(matriz_jugada, x + 1, y - 1, x + 2, y - 2):
+            lista[ficha] = -4
+        elif esta_en_rango(x + 1, y + 1) and (matriz_jugada[x + 1][y + 1] == "-"):
+            lista[ficha] = 3
+        elif esta_en_rango(x + 1, y - 1) and (matriz_jugada[x + 1][y - 1] == "-"):
+            lista[ficha] = -3
+        elif esta_en_rango(x - 1, y + 1) and (matriz_jugada[x - 1][y + 1] == "-"):
+            lista[ficha] = 2
+        elif esta_en_rango(x - 1, y - 1) and (matriz_jugada[x - 1][y - 1] == "-"):
+            lista[ficha] = -2
+        elif esta_en_rango(x - 2, y + 2) and puede_saltar(matriz_jugada, x - 1, y + 1, x - 2, y + 2):
+            lista[ficha] = 1
+        elif esta_en_rango(x - 2, y - 2) and puede_saltar(matriz_jugada, x - 1, y - 1, x - 2, y - 2):
+            lista[ficha] = -1
+
+    return lista
+
+def obtener_mejor_movimiento(posicion_valor):
+    letras = {1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "F", 7: "G", 8: "H"}
+    mayor_clave = max(posicion_valor.values(), key=abs)
+    maximo = [key for key, value in posicion_valor.items() if abs(value) == abs(mayor_clave)]
+    jugada_posible = []
+
+    for posicion in maximo:
+        cpu_jugada = ""
+        if posicion_valor[posicion] == 4:
+            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) - 2}"
+        elif posicion_valor[posicion] == -4:
+            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 2]}{int(posicion[0]) - 2}"
+        elif posicion_valor[posicion] == 3:
+            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 1]}{int(posicion[0]) - 1}"
+        elif posicion_valor[posicion] == -3:
+            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 1]}{int(posicion[0]) - 1}"
+        elif posicion_valor[posicion] == 2:
+            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 1]}{int(posicion[0]) + 1}"
+        elif posicion_valor[posicion] == -2:
+            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 1]}{int(posicion[0]) + 1}"
+        elif posicion_valor[posicion] == 1:
+            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) + 2}"
+        elif posicion_valor[posicion] == -1:
+            cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 2]}{int(posicion[0]) + 2}"
+       
+        jugada_posible.append(cpu_jugada)
+
+    return random.choice(jugada_posible)
+
+def posiciones_fichas(turno, matriz_jugada):
+    posiciones = []
     for fila in range(1,9):
         for columna in range(1,9):
-            if Turno == True:
+            if turno:
                 if matriz_jugada[fila][columna] == "X":
-                    #Nombredejugadas
-                    jug_posibles.append(f"{fila}{columna}")
-            elif Turno == False:
+                    posiciones.append(f"{fila}{columna}")
+            else:
                 if matriz_jugada[fila][columna] == "O":
-                    #Nombredejugadas
-                    jug_posibles.append(f"{fila}{columna}")
-    return jug_posibles
+                    posiciones.append(f"{fila}{columna}")
+    return posiciones
 
-def Computadora(ubicacion_fichas,Turno,matriz_jugada):
-    m_jud = ""
-    jugada = ""
-    lista = {}
-    j_posibles = []
-    Letras = {1:"A",2:"B",3:"C",4:"D",5:"E",6:"F",7:"G",8:"H"}
-    #Limitar el rango para que no salga de limites
-    for ficha in ubicacion_fichas:
-        if Turno == True:
-            #En esta parte se puntuara a cada movimiento posible y luego se guardara en un diccionario
-            #Caso en donde se prioriza un salto de 2 casillas
-            #Adelante derecha
-            if ((int(ficha[1]) + 2) <= 8) and ((int(ficha[0]) - 2) >= 1)and (matriz_jugada[int(ficha[0])-1][int(ficha[1])+1] == "O" or matriz_jugada[int(ficha[0])-1][int(ficha[1])+1] == "X" and matriz_jugada[int(ficha[0])-2][int(ficha[1])+2] == "-"):
-                lista[ficha] = 4
-            #Adelante izquierda
-            elif ((int(ficha[1]) + 2) <= 8) and ((int(ficha[0]) - 2) >= 1) and (matriz_jugada[int(ficha[0])-1][int(ficha[1])-1] == "O" or matriz_jugada[int(ficha[0])-1][int(ficha[1])-1] == "X" and matriz_jugada[int(ficha[0])-2][int(ficha[1])-2] == "-"):
-                lista[ficha] = -4
-            else:
-                # Caso en donde solo se mueve una ficha
-                #Adelante derecha
-                if ((int(ficha[1]) + 1) <= 8) and ((int(ficha[0]) - 1) >= 1) and (matriz_jugada[int(ficha[0])-1][int(ficha[1])+1] == "-"):
-                    lista[ficha] = 3
-                #adelante izquierda
-                elif ((int(ficha[1]) - 1) >= 1) and ((int(ficha[0]) - 1) >= 1)and (matriz_jugada[int(ficha[0])-1][int(ficha[1])-1] == "-"):
-                    lista[ficha] = -3
-                else:
-                    #Caso movimiento hacia atras una casilla
-                    if ((int(ficha[1]) + 1) <= 8) and ((int(ficha[0]) + 1) <= 8) and (matriz_jugada[int(ficha[0])+1][int(ficha[1])+1] == "-"):
-                        lista[ficha] = 2
-                    elif ((int(ficha[1]) - 1) >= 1) and ((int(ficha[0]) + 1) <= 8) and (matriz_jugada[int(ficha[0])+1][int(ficha[1])-1] == "-"):
-                        lista[ficha] = -2
-                    else:
-                        #Caso movimiento hacia atra 2 casillas
-                        if ((int(ficha[1]) + 2) <= 8) and ((int(ficha[0]) + 2) <= 8) and (matriz_jugada[int(ficha[0]) + 1 ][int(ficha[1]) + 1] == "O" or matriz_jugada[int(ficha[0]) + 1][int(ficha[1]) + 1] == "X" and matriz_jugada[int(ficha[0]) + 2][int(ficha[1]) + 2] == "-"):
-                            lista[ficha] = 1
-                        elif ((int(ficha[1]) - 2) >= 1) and ((int(ficha[0]) + 2) <= 8) and (matriz_jugada[int(ficha[0]) + 1][int(ficha[1]) - 1] == "O" or matriz_jugada[int(ficha[0]) + 1][int(ficha[1]) - 1] == "X" and matriz_jugada[int(ficha[0]) + 2][int(ficha[1]) - 2] == "-"):
-                            lista[ficha] = -1
-                        else:
-                            #no movimientos posibles
-                            lista[ficha] = 0
-        elif Turno == False:
-            if ((int(ficha[1]) +  2) <= 8) and ((int(ficha[0]) + 2) <= 8)and (matriz_jugada[int(ficha[0])+1][int(ficha[1])+1] == "O" or matriz_jugada[int(ficha[0])+1][int(ficha[1])+1] == "X" and matriz_jugada[int(ficha[0])+2][int(ficha[1])+2] == "-"):
-                lista[ficha] = 4
-            #Adelante izquierda
-            elif ((int(ficha[1]) - 2) >= 1) and ((int(ficha[0]) + 2) <= 8) and (matriz_jugada[int(ficha[0])+1][int(ficha[1])-1] == "O" or matriz_jugada[int(ficha[0])+1][int(ficha[1])-1] == "X" and matriz_jugada[int(ficha[0])+2][int(ficha[1])-2] == "-"):
-                lista[ficha] = -4
-            else:
-                # Caso en donde solo se mueve una ficha
-                #Adelante derecha
-                if ((int(ficha[1]) + 1) <= 8) and ((int(ficha[0]) + 1) <= 8) and (matriz_jugada[int(ficha[0])+1][int(ficha[1])+1] == "-"):
-                    lista[ficha] = 3
-                #adelante izquierda
-                elif ((int(ficha[1]) - 1) >= 1) and ((int(ficha[0]) + 1) <= 8)and (matriz_jugada[int(ficha[0])+1][int(ficha[1])-1] == "-"):
-                    lista[ficha] = -3
-                else:
-                    #Caso movimiento hacia atras una casilla
-                    if ((int(ficha[0]) - 1) >= 1) and ((int(ficha[1]) + 1) <= 8) and (matriz_jugada[int(ficha[0])-1][int(ficha[1])+1] == "-"):
-                        lista[ficha] = 2
-                    elif ((int(ficha[0]) - 1) >= 1) and ((int(ficha[1]) - 1) >= 1) and (matriz_jugada[int(ficha[0])-1][int(ficha[1])-1] == "-"):
-                        lista[ficha] = -2
-                    else:
-                        #Caso movimiento hacia atra 2 casillas
-                        if ((int(ficha[1]) + 2) <= 8) and ((int(ficha[0]) - 2) >= 1) and (matriz_jugada[int(ficha[0]) - 1 ][int(ficha[1]) + 1] == "O" or matriz_jugada[int(ficha[0]) - 1][int(ficha[1]) + 1] == "X" and matriz_jugada[int(ficha[0]) - 2][int(ficha[1]) + 2] == "-"):
-                            lista[ficha] = 1
-                        elif ((int(ficha[1]) - 2) >= 1) and ((int(ficha[0]) - 2) >= 1) and (matriz_jugada[int(ficha[0]) - 1][int(ficha[1]) - 1] == "O" or matriz_jugada[int(ficha[0]) - 1][int(ficha[1]) - 1] == "X" and matriz_jugada[int(ficha[0]) - 2][int(ficha[1]) - 2] == "-"):
-                            lista[ficha] = -1
-                        else:
-                            #no movimientos posibles
-                            lista[ficha] = 0
-    if Turno == True:
-        mayor_clave = max(lista.values(), key=abs)
-        maximo = [key for key, value in lista.items() if abs(value) == abs(mayor_clave)]
-        for item in maximo:
+def Computadora(turno, matriz_jugada):
+    posiciones = posiciones_fichas(turno, matriz_jugada)
 
-            j_list = item
-            cpu_jugada = ""
-            a = 1
-            b = 0
-            if lista[item] == 4:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) + 2]}{int(j_list[b]) - 2}"
-            elif lista[item] == -4:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) - 2]}{int(j_list[b]) - 2}"
-            elif lista[item] == 3:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) + 1]}{int(j_list[b]) - 1}"
-            elif lista[item] == -3:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) - 1]}{int(j_list[b]) - 1}"
-            elif lista[item] == 2:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) + 1]}{int(j_list[b]) + 1}"
-            elif lista[item] == -2:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) - 1]}{int(j_list[b]) + 1}"
-            elif lista[item] == 1:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) + 2]}{int(j_list[b]) + 2}"
-            elif lista[item] == -1:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) - 2]}{int(j_list[b]) + 2}"
-            j_posibles.append(cpu_jugada)
-        jug = random.choice(j_posibles)
-    elif Turno == False:
-        mayor_clave = max(lista.values(), key=abs)
-        maximo = [key for key, value in lista.items() if abs(value) == abs(mayor_clave)]
-        for item in maximo:
-            j_list = item
-            cpu_jugada = ""
-            a = 1
-            b = 0
-            if lista[item] == -4:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) - 2]}{int(j_list[b]) + 2}"
-            elif lista[item] == 4:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) + 2]}{int(j_list[b]) + 2}"
-            elif lista[item] == -3:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) - 1]}{int(j_list[b]) + 1}"
-            elif lista[item] == 3:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) + 1]}{int(j_list[b]) + 1}"
-            elif lista[item] == -2:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) - 1]}{int(j_list[b]) - 1}"
-            elif lista[item] == 2:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) + 1]}{int(j_list[b]) - 1}"
-            elif lista[item] == -1:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) - 2]}{int(j_list[b]) - 2}"
-            elif lista[item] == 1:
-                cpu_jugada += f"{Letras[int(j_list[a])]}{int(j_list[b])}{Letras[(int(j_list[a])) + 2]}{int(j_list[b]) - 2}"
-            j_posibles.append(cpu_jugada)
-        jug = random.choice(j_posibles)
+    movimientos = {}
+    for ficha in posiciones:
+        movimientos.update(valorar_movimientos(ficha, matriz_jugada, turno))
 
-
-    return jug
+    return obtener_mejor_movimiento(movimientos)
