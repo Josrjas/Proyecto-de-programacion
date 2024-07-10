@@ -28,7 +28,7 @@ def Computadora(ubicacion_fichas,Turno,matriz_jugada):
             if ((int(ficha[1]) + 2) <= 8) and ((int(ficha[0]) - 2) >= 1)and (matriz_jugada[int(ficha[0])-1][int(ficha[1])+1] == "O" or matriz_jugada[int(ficha[0])-1][int(ficha[1])+1] == "X" and matriz_jugada[int(ficha[0])-2][int(ficha[1])+2] == "-"):
                 lista[ficha] = 4
             #Adelante izquierda
-            elif ((int(ficha[1]) + 2) >= 1) and ((int(ficha[0]) - 2) >= 1) and (matriz_jugada[int(ficha[0])-1][int(ficha[1])-1] == "O" or matriz_jugada[int(ficha[0])-1][int(ficha[1])-1] == "X" and matriz_jugada[int(ficha[0])-2][int(ficha[1])-2] == "-"):
+            elif ((int(ficha[1]) + 2) <= 8) and ((int(ficha[0]) - 2) >= 1) and (matriz_jugada[int(ficha[0])-1][int(ficha[1])-1] == "O" or matriz_jugada[int(ficha[0])-1][int(ficha[1])-1] == "X" and matriz_jugada[int(ficha[0])-2][int(ficha[1])-2] == "-"):
                 lista[ficha] = -4
             else:
                 # Caso en donde solo se mueve una ficha
@@ -40,9 +40,9 @@ def Computadora(ubicacion_fichas,Turno,matriz_jugada):
                     lista[ficha] = -3
                 else:
                     #Caso movimiento hacia atras una casilla
-                    if ((int(ficha[0]) + 1) <= 8) and ((int(ficha[0]) + 1) <= 8) and (matriz_jugada[int(ficha[0])+1][int(ficha[1])+1] == "-"):
+                    if ((int(ficha[1]) + 1) <= 8) and ((int(ficha[0]) + 1) <= 8) and (matriz_jugada[int(ficha[0])+1][int(ficha[1])+1] == "-"):
                         lista[ficha] = 2
-                    elif ((int(ficha[0]) - 1) >= 1) and ((int(ficha[0]) + 1) <= 8) and (matriz_jugada[int(ficha[0])+1][int(ficha[1])-1] == "-"):
+                    elif ((int(ficha[1]) - 1) >= 1) and ((int(ficha[0]) + 1) <= 8) and (matriz_jugada[int(ficha[0])+1][int(ficha[1])-1] == "-"):
                         lista[ficha] = -2
                     else:
                         #Caso movimiento hacia atra 2 casillas
@@ -65,7 +65,7 @@ def Computadora(ubicacion_fichas,Turno,matriz_jugada):
                 if ((int(ficha[1]) + 1) <= 8) and ((int(ficha[0]) + 1) <= 8) and (matriz_jugada[int(ficha[0])+1][int(ficha[1])+1] == "-"):
                     lista[ficha] = 3
                 #adelante izquierda
-                elif ((int(ficha[1]) - 1) >= 1) and ((int(ficha[0]) + 1) >= 1)and (matriz_jugada[int(ficha[0])+1][int(ficha[1])-1] == "-"):
+                elif ((int(ficha[1]) - 1) >= 1) and ((int(ficha[0]) + 1) <= 8)and (matriz_jugada[int(ficha[0])+1][int(ficha[1])-1] == "-"):
                     lista[ficha] = -3
                 else:
                     #Caso movimiento hacia atras una casilla
@@ -75,9 +75,9 @@ def Computadora(ubicacion_fichas,Turno,matriz_jugada):
                         lista[ficha] = -2
                     else:
                         #Caso movimiento hacia atra 2 casillas
-                        if ((int(ficha[1]) + 2) <= 8) and ((int(ficha[0]) - 2) <= 8) and (matriz_jugada[int(ficha[0]) - 1 ][int(ficha[1]) + 1] == "O" or matriz_jugada[int(ficha[0]) - 1][int(ficha[1]) + 1] == "X" and matriz_jugada[int(ficha[0]) - 2][int(ficha[1]) + 2] == "-"):
+                        if ((int(ficha[1]) + 2) <= 8) and ((int(ficha[0]) - 2) >= 1) and (matriz_jugada[int(ficha[0]) - 1 ][int(ficha[1]) + 1] == "O" or matriz_jugada[int(ficha[0]) - 1][int(ficha[1]) + 1] == "X" and matriz_jugada[int(ficha[0]) - 2][int(ficha[1]) + 2] == "-"):
                             lista[ficha] = 1
-                        elif ((int(ficha[1]) - 2) >= 1) and ((int(ficha[0]) - 2) <= 8) and (matriz_jugada[int(ficha[0]) - 1][int(ficha[1]) - 1] == "O" or matriz_jugada[int(ficha[0]) - 1][int(ficha[1]) - 1] == "X" and matriz_jugada[int(ficha[0]) - 2][int(ficha[1]) - 2] == "-"):
+                        elif ((int(ficha[1]) - 2) >= 1) and ((int(ficha[0]) - 2) >= 1) and (matriz_jugada[int(ficha[0]) - 1][int(ficha[1]) - 1] == "O" or matriz_jugada[int(ficha[0]) - 1][int(ficha[1]) - 1] == "X" and matriz_jugada[int(ficha[0]) - 2][int(ficha[1]) - 2] == "-"):
                             lista[ficha] = -1
                         else:
                             #no movimientos posibles
