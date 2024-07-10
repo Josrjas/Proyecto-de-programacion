@@ -97,7 +97,7 @@ while Apagar == False:
         Turno = input(": ")
         while Turno != "Si" and Turno != "No" and Turno != "si" and Turno != "no":
             Turno = input(": ")
-        if Turno == "Si" or "si":
+        if Turno == "Si" or Turno == "si":
             Turno = True
             termina = False
             print(Construir_funcion(matriz_inicial))
@@ -111,15 +111,21 @@ while Apagar == False:
                 elif contador % 2 == 0 or contador == 0:
                     print("Introduce tu siguiente jugada")
                     jugada = input(": ")
-                    if Comprobacion_de_jugada_valida(jugada,matriz_jugada) == False:
-                        print("Error en jugada")
+                    if jugada == "Esc":
+                        print("Partida Cancelada")
+                        termina = True
                     else:
-                        print(Construir_funcion(mov(jugada,matriz_jugada)))
-                        contador += 1
+                        if Comprobacion_de_jugada_valida(jugada, matriz_jugada) == False:
+                            print("Error en jugada")
+                        elif Permitido_al_jugador(jugada, contador, matriz_jugada) == False:
+                            print("No puedes mover esa ficha")
+                        else:
+                            print(Construir_funcion(mov(jugada, matriz_jugada)))
+                            contador += 1
                 if final(matriz_jugada) == True:
                     termina = True
 
-        elif Turno == "No" or "no":
+        elif Turno == "No" or Turno == "no":
             Turno = False
             termina = False
             print(Construir_funcion(matriz_inicial))
@@ -133,10 +139,18 @@ while Apagar == False:
                 elif contador % 2 == 1:
                     print("Introduce tu siguiente jugada")
                     jugada = input(": ")
-                    if Comprobacion_de_jugada_valida(jugada) == False:
-                        print("Error en jugada")
+                    if jugada == "Esc":
+                        termina = True
+                        print("Partida Cancelada")
                     else:
-                        print(Construir_funcion(mov(jugada)))
-                        contador += 1
+                        if Comprobacion_de_jugada_valida(jugada) == False:
+                            print("Error en jugada")
+                        elif Permitido_al_jugador(jugada, contador, matriz_jugada) == False:
+                            print("No puedes mover esa ficha")
+                        else:
+                            print(Construir_funcion(mov(jugada)))
+                            contador += 1
+
+
                 if final(matriz_jugada) == True:
                     termina = True
