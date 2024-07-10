@@ -103,7 +103,7 @@ while Apagar == False:
             print(Construir_funcion(matriz_inicial))
             while termina != True:
                 if contador%2 == 1:
-                    jugada_CPU = Computadora(ubicacion_fichas(matriz_jugada,Turno),Turno,matriz_jugada)
+                    jugada_CPU = Computadora(Turno,matriz_jugada)
                     matriz_jugada = mov(jugada_CPU,matriz_jugada)
                     print(f"CPU juega: {jugada_CPU}")
                     print(Construir_funcion(matriz_jugada))
@@ -131,7 +131,7 @@ while Apagar == False:
             print(Construir_funcion(matriz_inicial))
             while termina != True:
                 if contador % 2 == 0 or contador == 0:
-                    jugada_CPU = Computadora(ubicacion_fichas(matriz_jugada, Turno), Turno,matriz_jugada)
+                    jugada_CPU = Computadora(Turno,matriz_jugada)
                     matriz_jugada = mov(jugada_CPU)
                     print(f"CPU juega: {jugada_CPU}")
                     print(Construir_funcion(matriz_jugada))
