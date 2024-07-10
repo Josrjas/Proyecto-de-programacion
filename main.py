@@ -1,10 +1,15 @@
 import datetime
-from movimientos import Construir_funcion
-from movimientos import mov
-from Construccionfuncion import Comprobacion_de_jugada_valida
-from Construccionfuncion import Permitido_al_jugador
+from movimientos import Construir_tablero
+from movimientos import Mover_ficha
+from validacionDeMovimientos import Comprobacion_de_jugada_valida
+from validacionDeMovimientos import Permitido_al_jugador
 from movimientos import final
-from Brainiac import Computadora
+from Brainiac import Computadora 
+#Estadisticas
+estadisticas = {}
+
+# Todos las partidas
+partidas = []
 Apagar = False
 
 while Apagar == False:
@@ -29,7 +34,7 @@ while Apagar == False:
     open("registro", 'a')
     while opcion not in "1" and opcion not in "2" and opcion not in "3":
         opcion = input("Opcion: ")
-
+    
     # opciones
     if int(opcion) == 1:
         hora_actual = f"{datetime.datetime.now().hour}:{datetime.datetime.now().minute}"
@@ -40,39 +45,60 @@ while Apagar == False:
         print("-------- ------------------Escriba Esc para cancelar la partida--------------------------------")
         print(f"{J_1} VS {J_2} {fecha} {hora_actual}")
         print("Introduce tu siguiente movimiento. Ejem:(Posición Inicial)(Posión Final) ---> A2B3")
-        print(Construir_funcion(matriz_inicial))
+        print(Construir_tablero(matriz_inicial))
+
+        # Guardar Datos para el registro
+        #Todos los jugadores
+        for j in (J_1, J_2):
+            if j not in estadisticas:
+                estadisticas[j] = [1,0]
+            else:
+                estadisticas[j][0] += 1
+
+        #Jugadores por parida
+        Datos =[]
+        Datos.append([J_1, J_2])
+
         # El tablero del juego
         termina = False
         contador = 0
-        ganador = ""
+        alguienGano = ""
         print(f"Turno de {J_1}")
         while termina != True:
             jugada = input(": ")
             if Comprobacion_de_jugada_valida(jugada,matriz_jugada) == True and Permitido_al_jugador(jugada, contador,matriz_jugada):
                 contador += 1
-                matriz_jugada = mov(jugada,matriz_jugada)
-                print(Construir_funcion(matriz_jugada))
-                ganador = final(matriz_jugada)
+                matriz_jugada = Mover_ficha(jugada,matriz_jugada)
+                print(Construir_tablero(matriz_jugada))
+                alguienGano = final(matriz_jugada)
                 if contador % 2 == 0:
                     print(f"Turno de {J_1}")
                 elif contador % 2 == 1:
                     print(f"Turno de {J_2}")
-                if ganador:
+                if alguienGano:
+                    partidas.append(matriz_jugada)
                     termina = True
-                    if ganador == "O":
+                    if alguienGano == "O":
                         print(f"¡Ha ganado {J_1}!")
                         print(f"¡Ha perdido {J_2}!")
                         ganador = J_1
-                    elif ganador == "X":
+
+                        estadisticas[J_1][1] += 1 
+                    elif alguienGano == "X":
                         print(f"¡Ha ganado {J_2}!")
                         print(f"¡Ha perdido {J_1}!")
                         ganador = J_2
+                        
+                        estadisticas[J_1][1] += 1 
+
             elif jugada == "Esc":
                 print("Partida Cancelada")
                 ganador = "Cancelada"
+                partidas.append(matriz_jugada)
                 termina = True
             elif Comprobacion_de_jugada_valida(jugada,matriz_jugada) == False or Permitido_al_jugador(jugada, contador, matriz_jugada):
                 print("Error en jugada")
+        
         with open("registro", 'r') as archivo:
             a = len(archivo.readlines())
         with open("registro", 'a') as archivo:
@@ -81,12 +107,35 @@ while Apagar == False:
 
     # registro de jugadas
     elif int(opcion) == 2:
+        # Juegos Realizados
         print("JUEGOS REALIZADOS: ")
-        # registro del juego
         print("  Jugadores      FechaHora       Ganador")
         imputFile = open("registro", 'r')
         for linea in imputFile:
             print(linea.strip())
+        # Estadisticas
+        print("Estadisticas: ")
+        print("Jugador   Cant.Juegos   Ganadas")
+        for jugador in estadisticas:
+            print(f"{jugador}   {estadisticas[jugador][0]}   {estadisticas[jugador][1]}")
+
+        # Opciones
+        print( "0. Regresar Menu Principal")
+        print( "1. Ver Juego")
+
+        opciones = input("Opcion: ")
+        while opciones not in ("0", "1"):
+            opciones = input("Opcion: ")
+
+        if opciones == "0":
+            None
+        #Ver juegos
+        elif opciones == "1":
+            for i in range(len(partidas)):
+                print(f"Partida {i+1}")
+                print(Construir_tablero(partidas[1]))
+                print()
+
 
     elif int(opcion) == 3:
         contador = 0
@@ -99,14 +148,14 @@ while Apagar == False:
         termina = False
         if Turno == "si":
             Turno = True
-            print(Construir_funcion(matriz_inicial))
+            print(Construir_tablero(matriz_inicial))
             
             while termina != True:
                 if contador%2 == 1:
                     jugada_CPU = Computadora(Turno,matriz_jugada)
-                    matriz_jugada = mov(jugada_CPU,matriz_jugada)
+                    matriz_jugada = Mover_ficha(jugada_CPU,matriz_jugada)
                     print(f"CPU juega: {jugada_CPU}")
-                    print(Construir_funcion(matriz_jugada))
+                    print(Construir_tablero(matriz_jugada))
                     contador += 1
                 else:
                     print("Introduce tu siguiente jugada")
@@ -120,21 +169,21 @@ while Apagar == False:
                         elif Permitido_al_jugador(jugada, contador, matriz_jugada) == False:
                             print("No puedes mover esa ficha")
                         else:
-                            print(Construir_funcion(mov(jugada, matriz_jugada)))
+                            print(Construir_tablero(Mover_ficha(jugada, matriz_jugada)))
                             contador += 1
                 if final(matriz_jugada) == True:
                     termina = True
 
         else:
             Turno = False
-            print(Construir_funcion(matriz_inicial))
+            print(Construir_tablero(matriz_inicial))
            
             while termina != True:
                 if contador % 2 == 0:
                     jugada_CPU = Computadora(Turno,matriz_jugada)
-                    matriz_jugada = mov(jugada_CPU,matriz_jugada)
+                    matriz_jugada = Mover_ficha(jugada_CPU,matriz_jugada)
                     print(f"CPU juega: {jugada_CPU}")
-                    print(Construir_funcion(matriz_jugada))
+                    print(Construir_tablero(matriz_jugada))
                     contador += 1
                 else:
                     print("Introduce tu siguiente jugada")
@@ -148,7 +197,7 @@ while Apagar == False:
                         elif Permitido_al_jugador(jugada, contador, matriz_jugada) == False:
                             print("No puedes mover esa ficha")
                         else:
-                            print(Construir_funcion(mov(jugada, matriz_jugada)))
+                            print(Construir_tablero(Mover_ficha(jugada, matriz_jugada)))
                             contador += 1
 
 

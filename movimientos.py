@@ -1,4 +1,4 @@
-def Construir_funcion(lis):
+def Construir_tablero(lis):
     matriz = ""
     for a in range(0, 9):
         fila = ""
@@ -8,7 +8,7 @@ def Construir_funcion(lis):
         matriz += fila
     return matriz
 
-def mov (jugada,matriz_jugada):
+def Mover_ficha(jugada,matriz_jugada):
     dic = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8}
     j_list = []
     for caracter in jugada:
