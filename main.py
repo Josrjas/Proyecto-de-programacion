@@ -1,3 +1,4 @@
+import json
 import datetime
 from movimientos import Construir_tablero
 from movimientos import Mover_ficha
@@ -6,10 +7,21 @@ from validacionDeMovimientos import Permitido_al_jugador
 from movimientos import final
 from Brainiac import Computadora 
 #Estadisticas
-estadisticas = {}
+try:
+    with open('estadisticas.json', 'r') as file:
+        estadisticas = json.load(file)
+except FileNotFoundError:
+    estadisticas = {}
+
+estadistica = {}
 
 # Todos las partidas
-partidas = []
+try:
+    with open("juegos_guardados.json", 'r') as file:
+        partidas = json.load(file)
+except FileNotFoundError:
+    partidas = []
+
 Apagar = False
 
 while Apagar == False:
@@ -50,10 +62,10 @@ while Apagar == False:
         # Guardar Datos para el registro
         #Todos los jugadores
         for j in (J_1, J_2):
-            if j not in estadisticas:
-                estadisticas[j] = [1,0]
+            if j not in estadistica:
+                estadistica[j] = [1,0]
             else:
-                estadisticas[j][0] += 1
+                estadistica[j][0] += 1
 
         #Jugadores por parida
         Datos =[]
@@ -83,13 +95,13 @@ while Apagar == False:
                         print(f"¡Ha perdido {J_2}!")
                         ganador = J_1
 
-                        estadisticas[J_1][1] += 1 
+                        estadistica[J_1][1] += 1 
                     elif alguienGano == "X":
                         print(f"¡Ha ganado {J_2}!")
                         print(f"¡Ha perdido {J_1}!")
                         ganador = J_2
                         
-                        estadisticas[J_2][1] += 1 
+                        estadistica[J_2][1] += 1 
 
             elif jugada == "Esc":
                 partidas.append(matriz_jugada)
@@ -117,8 +129,8 @@ while Apagar == False:
         # Estadisticas
         print("Estadisticas: ")
         print("Jugador   Cant.Juegos   Ganadas")
-        for jugador in estadisticas:
-            print(f"{jugador}   {estadisticas[jugador][0]}   {estadisticas[jugador][1]}")
+        for jugador in estadistica:
+            print(f"{jugador}   {estadistica[jugador][0]}   {estadistica[jugador][1]}")
 
         # Opciones
         print( "0. Regresar Menu Principal")
@@ -134,7 +146,7 @@ while Apagar == False:
         elif opciones == "1":
             for i in range(len(partidas)):
                 print(f"Partida {i+1}")
-                print(Construir_tablero(partidas[1]))
+                print(Construir_tablero(partidas[i]))
                 print()
 
 
@@ -150,10 +162,10 @@ while Apagar == False:
         fecha = datetime.date.today()
         
         for j in (J_1, "Computadora"):
-            if j not in estadisticas:
-                estadisticas[j] = [1,0]
+            if j not in estadistica:
+                estadistica[j] = [1,0]
             else:
-                estadisticas[j][0] += 1
+                estadistica[j][0] += 1
 
         
         print("¿Jugaras primero? (Si o No)")
@@ -232,13 +244,30 @@ while Apagar == False:
                     termina = True
                     if contador % 2 == 1:
                         ganador = J_1
-                        estadisticas[ganador][1] += 1 
+                        estadistica[ganador][1] += 1 
                     else:
                         ganador = "Computadora"
-                        estadisticas[ganador][1] += 1
+                        estadistica[ganador][1] += 1
 
         with open("registro", 'r') as archivo:
             a = len(archivo.readlines())
         with open("registro", 'a') as archivo:
             archivo.write(f"{a + 1} {J_1} VS Computadora   {fecha} {hora_actual}   {ganador}\n")
             archivo.close()
+
+    estadisticas.update(estadistica)
+    
+    #Añadiendo las estadisticas al Json
+    for clave, valor in estadistica.items():
+        if clave in estadisticas:
+            estadisticas[clave] += valor
+        else:
+            estadisticas[clave] = valor
+            
+    with open("estadisticas.json", 'w') as file:
+        json.dump(estadisticas, file, indent=4)
+
+    #Añadiendo las partidas al Json
+    with open("juegos_guardados.json", 'w') as file:
+        json.dump(partidas, file, indent=4)
+
