@@ -6,11 +6,11 @@ def valorar_movimientos(ficha, matriz_jugada, turno):
     def puede_saltar(matriz_jugada, x, y, x2, y2):
         return (matriz_jugada[x][y] in ["O", "X"]) and (matriz_jugada[x2][y2] == "-")
 
-    lista = {}
     x = int(ficha[0])
     y =int(ficha[1])
     
-    # Se asigna un puntaje a cada movimiento y se guarda en un diccionario
+    lista = {}
+    # Se asigna un puntaje a cada movimiento y se guarda en un diccionario hols
     if turno: # Juega con "X"
         if esta_en_rango(x - 2, y + 2) and puede_saltar(matriz_jugada, x - 1, y + 1, x - 2, y + 2):
             lista[ficha] = 4
@@ -55,8 +55,8 @@ def obtener_mejor_movimiento(turno, posicion_valor):
     jugada_posible = []
 
     for posicion in maximo:
+        cpu_jugada = ""
         if turno:
-            cpu_jugada = ""
             if posicion_valor[posicion] == 4:
                 cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) - 2}"
             elif posicion_valor[posicion] == -4:
@@ -74,7 +74,6 @@ def obtener_mejor_movimiento(turno, posicion_valor):
             elif posicion_valor[posicion] == -1:
                 cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) - 2]}{int(posicion[0]) + 2}"
         else:
-            cpu_jugada = ""
             if posicion_valor[posicion] == 4:
                 cpu_jugada += f"{letras[int(posicion[1])]}{int(posicion[0])}{letras[int(posicion[1]) + 2]}{int(posicion[0]) + 2}"
             elif posicion_valor[posicion] == -4:
@@ -107,11 +106,12 @@ def posiciones_fichas(turno, matriz_jugada):
                     posiciones.append(f"{fila}{columna}")
     return posiciones
 
-def Computadora(turno, matriz_jugada):
+def Computadora(turno, matriz_jugada): # Obtiene el mejor movimiento en la tabla
     posiciones = posiciones_fichas(turno, matriz_jugada)
 
-    movimientos = {}
+    # Otorga un valor a todas las fichas
+    val_fichas = {}
     for ficha in posiciones:
-        movimientos.update(valorar_movimientos(ficha, matriz_jugada, turno))
+        val_fichas.update(valorar_movimientos(ficha, matriz_jugada, turno))
 
-    return obtener_mejor_movimiento(turno, movimientos)
+    return obtener_mejor_movimiento(turno, val_fichas) # Devuelve un string con la mejor jugada

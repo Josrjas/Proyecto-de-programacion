@@ -7,7 +7,7 @@ from validacionDeMovimientos import Permitido_al_jugador
 from movimientos import final
 from Brainiac import Computadora 
 #Estadisticas
-try:
+try:    
     with open('estadisticas.json', 'r') as file:
         estadisticas = json.load(file)
 except FileNotFoundError:
@@ -42,9 +42,10 @@ while Apagar == False:
     print("1 Comezar Juego")
     print("2 Juegos realizados")
     print("3 Jugar contra computadora")
+    print("4 Salir del Juego")
     opcion = input("Opcion: ")
     open("registro", 'a')
-    while opcion not in "1" and opcion not in "2" and opcion not in "3":
+    while opcion not in ("1","2","3","4"):
         opcion = input("Opcion: ")
     
     # opciones
@@ -255,6 +256,9 @@ while Apagar == False:
             archivo.write(f"{a + 1} {J_1} VS Computadora   {fecha} {hora_actual}   {ganador}\n")
             archivo.close()
 
+    elif int(opcion) == 4:
+        Apagar = True
+
     estadisticas.update(estadistica)
     
     #Añadiendo las estadisticas al Json
@@ -270,4 +274,6 @@ while Apagar == False:
     #Añadiendo las partidas al Json
     with open("juegos_guardados.json", 'w') as file:
         json.dump(partidas, file, indent=4)
+
+
 
